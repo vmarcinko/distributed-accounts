@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder/>
+
+    <bean id="consoleController" class="me.distributedaccounts.web.console.ConsoleControllerImpl">
+        <property name="accountManagementClient" ref="accountManagementClient"/>
+    </bean>
+
+    <bean id="clusterClient" class="me.distributedaccounts.mgmt.client.cluster.HelixClusterClientImpl">
+        <property name="clusterName" value="MGMTCLUSTER"/>
+        <property name="zkAddress" value="127.0.0.1:2181"/>
+    </bean>
+
+    <bean id="accountManagementClient" class="me.distributedaccounts.mgmt.client.AccountManagementClientImpl">
+        <property name="restTemplate" ref="restTemplate"/>
+        <property name="clusterClient" ref="clusterClient"/>
+        <property name="clusterResourceName" value="mgmtService"/>
+    </bean>
+
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+        <property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <value>application/json</value>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+</beans>

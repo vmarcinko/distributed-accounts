@@ -1,0 +1,14 @@
+archivesBaseName = 'distributed-accounts-avro-log'
+
+ext {
+    avroVersion = '1.7.5'
+}
+
+dependencies {
+
+    compile (
+            "org.apache.avro:avro:${avroVersion}",
+            "org.apache.kafka:kafka_2.10:0.8.0",
+            "org.springframework:spring-webmvc:4.0.2.RELEASE"
+    )
+}

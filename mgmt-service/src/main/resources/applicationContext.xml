@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder/>
+
+    <bean class="me.distributedaccounts.mgmt.service.cluster.HelixServiceClusterManager">
+        <property name="clusterName" value="MGMTCLUSTER"/>
+        <property name="instanceName" value="${host}_${port}"/>
+        <property name="zkAddress" value="127.0.0.1:2181"/>
+        <property name="helixStateModelFactory" ref="helixStateModelFactory"/>
+    </bean>
+
+    <bean class="me.distributedaccounts.mgmt.service.jetty.SingleDispatcherServletJettyService">
+        <property name="port" value="${port}"/>
+        <property name="servletPath" value="/*"/>
+        <property name="configLocation" value="classpath:restServlet.xml"/>
+    </bean>
+
+    <bean id="accountManagementService" class="me.distributedaccounts.mgmt.service.AccountManagementServiceImpl">
+        <property name="accountDao" ref="accountDao"/>
+        <property name="avroRecordLogger" ref="avroRecordLogger"/>
+        <property name="accountEventProcessor" ref="accountEventProcessor"/>
+        <property name="accountEventsTopicName" value="accountEvents"/>
+    </bean>
+
+    <bean id="accountEventProcessor" class="me.distributedaccounts.mgmt.service.event.processor.AccountEventProcessorImpl">
+        <property name="accountDao" ref="accountDao"/>
+    </bean>
+
+    <bean id="accountDao" class="me.distributedaccounts.mgmt.service.dao.InMemoryAccountDaoImpl"/>
+
+    <bean id="avroRecordLogger" class="me.distributedaccounts.avrolog.logger.KafkaAvroRecordLoggerImpl">
+        <property name="kafkaProducerConfigProperties">
+            <props>
+                <prop key="metadata.broker.list">localhost:9092</prop>
+                <prop key="request.required.acks">1</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="kafkaAvroRecordLogConsumer" class="me.distributedaccounts.avrolog.consumer.KafkaAvroRecordLogConsumerImpl">
+        <property name="schemaRepository" ref="schemaRepository" />
+        <property name="topic" value="accountEvents" />
+        <property name="avroRecordConsumer">
+            <bean class="me.distributedaccounts.mgmt.service.event.processor.AccountEventAvroRecordConsumer">
+                <property name="accountEventProcessor" ref="accountEventProcessor"/>
+            </bean>
+        </property>
+        <property name="kafkaConsumerConfigProperties">
+            <props>
+                <prop key="zookeeper.connect">127.0.0.1:2181</prop>
+                <prop key="group.id">${host}_${port}_group</prop>
+                <prop key="zookeeper.session.timeout.ms">400</prop>
+                <prop key="zookeeper.sync.time.ms">200</prop>
+                <prop key="auto.commit.interval.ms">1000</prop>
+                <prop key="auto.offset.reset">smallest</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="schemaRepository" class="me.distributedaccounts.avrolog.schemarepo.InMemorySchemaRepositoryImpl">
+        <property name="avroClasses">
+            <set>
+                <value>me.distributedaccounts.mgmt.service.event.AccountOpenedEvent</value>
+                <value>me.distributedaccounts.mgmt.service.event.AccountClosedEvent</value>
+                <value>me.distributedaccounts.mgmt.service.event.MoneyDepositedEvent</value>
+                <value>me.distributedaccounts.mgmt.service.event.MoneyWithdrawnEvent</value>
+            </set>
+        </property>
+    </bean>
+
+    <bean id="avroRecordConsumer" class="me.distributedaccounts.mgmt.service.event.processor.AccountEventAvroRecordConsumer">
+        <property name="accountEventProcessor" ref="accountEventProcessor"/>
+    </bean>
+
+    <bean id="helixStateModelFactory" class="me.distributedaccounts.mgmt.service.cluster.ManagementServiceStateModelFactory">
+        <property name="kafkaAvroRecordLogConsumer" ref="kafkaAvroRecordLogConsumer"/>
+    </bean>
+
+</beans>

@@ -1,0 +1,1 @@
+include 'mgmt-service', 'mgmt-client', 'web', 'avro-log'

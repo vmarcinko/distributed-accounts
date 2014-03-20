@@ -1,0 +1,161 @@
+[
+    {
+        "name": "EventData",
+        "type": "record",
+        "namespace": "me.distributedaccounts.mgmt.service.event",
+        "fields": [
+            {
+                "name": "id",
+                "type": "string"
+            },
+            {
+                "name": "timestampMillis",
+                "type": "long"
+            }
+        ]
+    },
+    {
+        "name": "AccountData",
+        "type": "record",
+        "namespace": "me.distributedaccounts.mgmt.service.event",
+        "fields": [
+            {
+                "name": "id",
+                "type": "string"
+            },
+            {
+                "name": "balance",
+                "type": "float"
+            },
+            {
+                "name": "active",
+                "type": "boolean"
+            },
+            {
+                "name": "description",
+                "type": "string"
+            }
+        ]
+    },
+    {
+        "name": "AccountCreatedEffect",
+        "type": "record",
+        "namespace": "me.distributedaccounts.mgmt.service.event",
+        "fields": [
+            {
+                "name": "accountData",
+                "type": "me.distributedaccounts.mgmt.service.event.AccountData"
+            }
+        ]
+    },
+    {
+        "name": "AccountUpdatedEffect",
+        "type": "record",
+        "namespace": "me.distributedaccounts.mgmt.service.event",
+        "fields": [
+            {
+                "name": "accountData",
+                "type": "me.distributedaccounts.mgmt.service.event.AccountData"
+            }
+        ]
+    },
+    {
+        "name": "AccountDeletedEffect",
+        "type": "record",
+        "namespace": "me.distributedaccounts.mgmt.service.event",
+        "fields": [
+            {
+                "name": "accountId",
+                "type": "string"
+            }
+        ]
+    },
+    {
+        "name": "AccountOpenedEvent",
+        "type": "record",
+        "namespace": "me.distributedaccounts.mgmt.service.event",
+        "fields": [
+            {
+                "name": "eventData",
+                "type": "me.distributedaccounts.mgmt.service.event.EventData"
+            },
+            {
+                "name": "stateEffects",
+                "type": ["AccountCreatedEffect", "AccountUpdatedEffect", "AccountDeletedEffect"]
+            },
+            {
+                "name": "accountId",
+                "type": "string"
+            },
+            {
+                "name": "description",
+                "type": "string"
+            }
+        ]
+    },
+    {
+        "name": "AccountClosedEvent",
+        "type": "record",
+        "namespace": "me.distributedaccounts.mgmt.service.event",
+        "fields": [
+            {
+                "name": "eventData",
+                "type": "me.distributedaccounts.mgmt.service.event.EventData"
+            },
+            {
+                "name": "stateEffects",
+                "type": ["AccountCreatedEffect", "AccountUpdatedEffect", "AccountDeletedEffect"]
+            },
+            {
+                "name": "accountId",
+                "type": "string"
+            }
+        ]
+    },
+    {
+        "name": "MoneyWithdrawnEvent",
+        "type": "record",
+        "namespace": "me.distributedaccounts.mgmt.service.event",
+        "fields": [
+            {
+                "name": "eventData",
+                "type": "me.distributedaccounts.mgmt.service.event.EventData"
+            },
+            {
+                "name": "stateEffects",
+                "type": ["AccountCreatedEffect", "AccountUpdatedEffect", "AccountDeletedEffect"]
+            },
+            {
+                "name": "accountId",
+                "type": "string"
+            },
+            {
+                "name": "amount",
+                "type": "float"
+            }
+        ]
+    },
+    {
+        "name": "MoneyDepositedEvent",
+        "type": "record",
+        "namespace": "me.distributedaccounts.mgmt.service.event",
+        "fields": [
+            {
+                "name": "eventData",
+                "type": "me.distributedaccounts.mgmt.service.event.EventData"
+            },
+            {
+                "name": "stateEffects",
+                "type": ["AccountCreatedEffect", "AccountUpdatedEffect", "AccountDeletedEffect"]
+            },
+            {
+                "name": "accountId",
+                "type": "string"
+            },
+            {
+                "name": "amount",
+                "type": "float"
+            }
+        ]
+    }
+]

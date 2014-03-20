@@ -1,0 +1,52 @@
+ext {
+    slf4jVersion = '1.7.5'
+    slf4jVersion = '1.7.5'
+}
+
+allprojects {
+	apply plugin: 'idea'
+	version = '1.0'
+}
+
+subprojects {
+	apply plugin: 'java'
+
+    sourceCompatibility = 1.7
+
+	group = 'distributed-accounts'
+	archivesBaseName = 'distributed-accounts'
+	
+    repositories {
+		mavenCentral();    
+	}
+	
+	configurations {
+		all*.exclude group: "org.slf4j", module: "slf4j-log4j12"
+		all*.exclude group: "org.slf4j", module: "slf4j-jcl"
+		all*.exclude group: "org.slf4j", module: "slf4j-simple"
+		all*.exclude group: "commons-logging", module: "commons-logging"
+		all*.exclude group: "log4j", module: "log4j"
+	}
+
+	dependencies {
+		compile (
+			"org.slf4j:slf4j-api:${slf4jVersion}",
+			"org.slf4j:jcl-over-slf4j:${slf4jVersion}",
+			"org.slf4j:log4j-over-slf4j:${slf4jVersion}",
+			"ch.qos.logback:logback-classic:1.0.+",
+            'org.springframework:spring-context:4.0.2.RELEASE'
+		)
+	}
+}
+
+project(':web') {
+    dependencies {
+        compile project(':mgmt-client')
+    }
+}
+project(':mgmt-service') {
+    dependencies {
+        compile project(':avro-log')
+    }
+}
+

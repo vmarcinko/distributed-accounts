@@ -1,0 +1,47 @@
+archivesBaseName = 'distributed-accounts-mgmt-service'
+
+ext {
+    avroDirPath = 'avro'
+    avroJavaDirPath = "${avroDirPath}/java"
+    avroSchemasDirPath = "${avroDirPath}/schemas"
+    avroVersion = '1.7.5'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir avroJavaDirPath
+        }
+    }
+}
+
+configurations {
+    avrotools {
+        description = 'Avro tools dependencies'
+    }
+}
+
+dependencies {
+
+    avrotools (
+            "org.apache.avro:avro-tools:${avroVersion}"
+	)
+
+    compile (
+            "net.sf.jopt-simple:jopt-simple:4.6",
+            "org.apache.avro:avro:${avroVersion}",
+            "org.apache.kafka:kafka_2.10:0.8.0",
+            "org.springframework:spring-webmvc:4.0.2.RELEASE",
+            "com.fasterxml.jackson.core:jackson-core:2.3.2",
+            "com.fasterxml.jackson.core:jackson-annotations:2.3.2",
+            "com.fasterxml.jackson.core:jackson-databind:2.3.1",
+			"org.apache.helix:helix-core:0.7.0-incubating",
+            "org.eclipse.jetty:jetty-webapp:9.1.2.v20140210"
+    )
+}
+
+task generateAvroClasses(type: JavaExec) {
+    main = 'org.apache.avro.tool.Main'
+    args = ['compile', 'schema', "${avroSchemasDirPath}/*.avsc", avroJavaDirPath].toList()
+    classpath = configurations.avrotools
+}
