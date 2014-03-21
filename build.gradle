@@ -42,11 +42,19 @@ subprojects {
 project(':web') {
     dependencies {
         compile project(':mgmt-client')
+        compile project(':search-client')
     }
 }
 project(':mgmt-service') {
     dependencies {
         compile project(':avro-log')
+        compile project(':commons')
+    }
+}
+project(':search-service') {
+    dependencies {
+        compile project(':avro-log')
+        compile project(':commons')
     }
 }
 

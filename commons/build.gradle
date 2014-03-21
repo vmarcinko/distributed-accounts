@@ -1,0 +1,9 @@
+archivesBaseName = 'distributed-accounts-commons'
+
+dependencies {
+
+    compile (
+            "org.springframework:spring-webmvc:4.0.2.RELEASE",
+            "org.eclipse.jetty:jetty-webapp:9.1.2.v20140210"
+    )
+}

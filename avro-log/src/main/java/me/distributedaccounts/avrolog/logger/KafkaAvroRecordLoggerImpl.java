@@ -21,7 +21,7 @@ public class KafkaAvroRecordLoggerImpl implements AvroRecordLogger, Initializing
     private final Logger logger = LoggerFactory.getLogger(KafkaAvroRecordLoggerImpl.class);
 
     private Properties kafkaProducerConfigProperties;
-    private Producer<Integer, byte[]> producer;
+    private Producer<Object, byte[]> producer;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -37,11 +37,11 @@ public class KafkaAvroRecordLoggerImpl implements AvroRecordLogger, Initializing
     }
 
     @Override
-    public void logRecord(String topic, int partition, GenericContainer avroRecord) {
-        logger.info("Logging Avro record '" + avroRecord.getSchema().getFullName() + " to topic/partition " + topic + "/" + partition + ": " + avroRecord);
+    public void logRecord(String topic, int partition, Object recordKey, GenericContainer avroRecord) {
+        logger.info("Logging Avro record '" + avroRecord.getSchema().getFullName() + " to topic/partition " + topic + "/" + partition + " under key " + recordKey + ": " + avroRecord);
         try {
             byte[] messageBytes = encodeAvroRecordWithSchemaId(avroRecord);
-            producer.send(new KeyedMessage<Integer, byte[]>(topic, messageBytes));
+            producer.send(new KeyedMessage<>(topic, recordKey, messageBytes));
 
         } catch (IOException e) {
             throw new RuntimeException(e);

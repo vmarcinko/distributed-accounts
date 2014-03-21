@@ -29,7 +29,7 @@ public class AccountManagementServiceImpl implements AccountManagementService {
                 new AccountCreatedEffect(account.toAccountData()),
                 id.toString(), description);
 
-        logAndProcessEvent(event);
+        logAndProcessEvent(id, event);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class AccountManagementServiceImpl implements AccountManagementService {
                 new AccountDeletedEffect(id.toString()),
                 id.toString());
 
-        logAndProcessEvent(event);
+        logAndProcessEvent(id, event);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class AccountManagementServiceImpl implements AccountManagementService {
                 new AccountUpdatedEffect(account.toAccountData()),
                 id.toString(), amount);
 
-        logAndProcessEvent(event);
+        logAndProcessEvent(id, event);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class AccountManagementServiceImpl implements AccountManagementService {
                 new AccountUpdatedEffect(account.toAccountData()),
                 id.toString(), amount);
 
-        logAndProcessEvent(event);
+        logAndProcessEvent(id, event);
     }
 
     @Override
@@ -92,8 +92,8 @@ public class AccountManagementServiceImpl implements AccountManagementService {
         return new EventData(eventId, timestampMillis);
     }
 
-    private void logAndProcessEvent(GenericRecord event) {
-        avroRecordLogger.logRecord(accountEventsTopicName, 0, event);
+    private void logAndProcessEvent(UUID accountId, GenericRecord event) {
+        avroRecordLogger.logRecord(accountEventsTopicName, 0, accountId.toString(), event);
 
         try {
             accountEventProcessor.processEvent(event);

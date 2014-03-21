@@ -1,4 +1,4 @@
-package me.distributedaccounts.mgmt.service.jetty;
+package me.distributedaccounts.commons.jetty;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;

@@ -1,1 +1,1 @@
-include 'mgmt-service', 'mgmt-client', 'web', 'avro-log'
+include 'mgmt-service', 'mgmt-client', 'web', 'avro-log', 'search-service', 'search-client', 'commons'

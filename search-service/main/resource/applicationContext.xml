@@ -9,7 +9,7 @@
 
     <context:property-placeholder/>
 
-    <bean class="me.distributedaccounts.mgmt.service.cluster.HelixServiceClusterManager">
+    <bean class="me.distributedaccounts.search.service.cluster.HelixServiceClusterManager">
         <property name="clusterName" value="MGMTCLUSTER"/>
         <property name="instanceName" value="${host}_${port}"/>
         <property name="zkAddress" value="127.0.0.1:2181"/>
@@ -22,34 +22,19 @@
         <property name="configLocation" value="classpath:restServlet.xml"/>
     </bean>
 
+<!--
     <bean id="accountManagementService" class="me.distributedaccounts.mgmt.service.AccountManagementServiceImpl">
         <property name="accountDao" ref="accountDao"/>
-        <property name="avroRecordLogger" ref="avroRecordLogger"/>
-        <property name="accountEventProcessor" ref="accountEventProcessor"/>
         <property name="accountEventsTopicName" value="accountEvents"/>
     </bean>
-
-    <bean id="accountEventProcessor" class="me.distributedaccounts.mgmt.service.event.processor.AccountEventProcessorImpl">
-        <property name="accountDao" ref="accountDao"/>
-    </bean>
-
-    <bean id="accountDao" class="me.distributedaccounts.mgmt.service.dao.InMemoryAccountDaoImpl"/>
-
-    <bean id="avroRecordLogger" class="me.distributedaccounts.avrolog.logger.KafkaAvroRecordLoggerImpl">
-        <property name="kafkaProducerConfigProperties">
-            <props>
-                <prop key="metadata.broker.list">localhost:9092</prop>
-                <prop key="request.required.acks">1</prop>
-            </props>
-        </property>
-    </bean>
+-->
 
     <bean id="kafkaAvroRecordLogConsumer" class="me.distributedaccounts.avrolog.consumer.KafkaAvroRecordLogConsumerImpl">
         <property name="schemaRepository" ref="schemaRepository" />
         <property name="topic" value="accountEvents" />
         <property name="avroRecordConsumer">
-            <bean class="me.distributedaccounts.mgmt.service.event.processor.AccountEventAvroRecordConsumer">
-                <property name="accountEventProcessor" ref="accountEventProcessor"/>
+            <bean class="me.distributedaccounts.search.service.AccountEventAvroRecordConsumer">
+                <property name="accountDescriptionIndex" ref="accountDescriptionIndex"/>
             </bean>
         </property>
         <property name="kafkaConsumerConfigProperties">
@@ -75,8 +60,10 @@
         </property>
     </bean>
 
-    <bean id="helixStateModelFactory" class="me.distributedaccounts.mgmt.service.cluster.ManagementServiceStateModelFactory">
+    <bean id="helixStateModelFactory" class="me.distributedaccounts.search.service.cluster.SearchServiceStateModelFactory">
         <property name="kafkaAvroRecordLogConsumer" ref="kafkaAvroRecordLogConsumer"/>
     </bean>
+
+    <bean id="accountDescriptionIndex" class="me.distributedaccounts.search.service.AccountDescriptionIndexImpl"/>
 
 </beans>
