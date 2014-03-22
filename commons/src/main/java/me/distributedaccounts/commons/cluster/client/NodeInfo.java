@@ -1,4 +1,4 @@
-package me.distributedaccounts.mgmt.client.cluster;
+package me.distributedaccounts.commons.cluster.client;
 
 public class NodeInfo {
     private final String name;

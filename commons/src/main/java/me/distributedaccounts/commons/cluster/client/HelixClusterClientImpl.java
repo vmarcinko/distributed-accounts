@@ -1,4 +1,4 @@
-package me.distributedaccounts.mgmt.client.cluster;
+package me.distributedaccounts.commons.cluster.client;
 
 import org.apache.helix.*;
 import org.apache.helix.model.IdealState;

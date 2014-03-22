@@ -22,8 +22,8 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
-    <bean class="me.distributedaccounts.mgmt.service.rest.AccountServiceRestController">
-        <property name="accountManagementService" ref="accountManagementService"/>
+    <bean class="me.distributedaccounts.search.service.rest.SearchServiceRestController">
+        <property name="accountDescriptionIndex" ref="accountDescriptionIndex"/>
     </bean>
 
 </beans>

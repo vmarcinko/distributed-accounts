@@ -1,7 +1,7 @@
 package me.distributedaccounts.mgmt.client;
 
-import me.distributedaccounts.mgmt.client.cluster.ClusterClient;
-import me.distributedaccounts.mgmt.client.cluster.NodeInfo;
+import me.distributedaccounts.commons.cluster.client.ClusterClient;
+import me.distributedaccounts.commons.cluster.client.NodeInfo;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;

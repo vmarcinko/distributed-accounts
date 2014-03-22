@@ -13,7 +13,7 @@
         <property name="accountManagementClient" ref="accountManagementClient"/>
     </bean>
 
-    <bean id="clusterClient" class="me.distributedaccounts.mgmt.client.cluster.HelixClusterClientImpl">
+    <bean id="clusterClient" class="me.distributedaccounts.commons.cluster.client.HelixClusterClientImpl">
         <property name="clusterName" value="MGMTCLUSTER"/>
         <property name="zkAddress" value="127.0.0.1:2181"/>
     </bean>
@@ -22,6 +22,12 @@
         <property name="restTemplate" ref="restTemplate"/>
         <property name="clusterClient" ref="clusterClient"/>
         <property name="clusterResourceName" value="mgmtService"/>
+    </bean>
+
+    <bean id="accountSearchClient" class="me.distributedaccounts.search.client.AccountSearchClientImpl">
+        <property name="restTemplate" ref="restTemplate"/>
+        <property name="clusterClient" ref="clusterClient"/>
+        <property name="clusterResourceName" value="searchService"/>
     </bean>
 
     <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">

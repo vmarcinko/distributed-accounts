@@ -4,6 +4,8 @@ dependencies {
 
     compile (
             "org.springframework:spring-webmvc:4.0.2.RELEASE",
-            "org.eclipse.jetty:jetty-webapp:9.1.2.v20140210"
+            "org.eclipse.jetty:jetty-webapp:9.1.2.v20140210",
+            "org.apache.helix:helix-core:0.7.0-incubating"
+
     )
 }

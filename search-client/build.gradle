@@ -4,7 +4,6 @@ dependencies {
 
     compile (
             "org.springframework:spring-webmvc:4.0.2.RELEASE",
-			"org.apache.helix:helix-core:0.7.0-incubating",
             "com.fasterxml.jackson.core:jackson-core:2.3.2",
             "com.fasterxml.jackson.core:jackson-annotations:2.3.2",
             "com.fasterxml.jackson.core:jackson-databind:2.3.1"
