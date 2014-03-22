@@ -8,24 +8,28 @@ import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.RAMDirectory;
+import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.util.*;
 
 public class AccountDescriptionIndexImpl implements AccountDescriptionIndex, InitializingBean, DisposableBean {
     private final Logger logger = LoggerFactory.getLogger(AccountDescriptionIndexImpl.class);
+
+    private Resource indexFile;
 
     private static final Version version = Version.LUCENE_47;
     private static final String accountIdFieldName = "accountId";
@@ -36,8 +40,7 @@ public class AccountDescriptionIndexImpl implements AccountDescriptionIndex, Ini
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        // Store the index in memory:
-        directory = new RAMDirectory();
+        directory = FSDirectory.open(indexFile.getFile());
         analyzer = new StandardAnalyzer(version);
     }
 
@@ -86,6 +89,24 @@ public class AccountDescriptionIndexImpl implements AccountDescriptionIndex, Ini
     @Override
     public void removeAccountDescription(String accountId) {
         logger.debug("Removing account description: accountId=" + accountId);
+        IndexWriter indexWriter = null;
+        try {
+            IndexWriterConfig config = new IndexWriterConfig(version, analyzer);
+            indexWriter = new IndexWriter(directory, config);
+
+            indexWriter.deleteDocuments(new Term(accountIdFieldName, accountId));
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+
+        } finally {
+            if (indexWriter != null) {
+                try {
+                    indexWriter.close();
+                } catch (IOException e) {
+                }
+            }
+        }
     }
 
     @Override
@@ -98,6 +119,7 @@ public class AccountDescriptionIndexImpl implements AccountDescriptionIndex, Ini
         DirectoryReader directoryReader = null;
         try {
             directoryReader = DirectoryReader.open(directory);
+
             IndexSearcher indexSearcher = new IndexSearcher(directoryReader);
             // Parse a simple query that searches for description field value:
             QueryParser queryParser = new QueryParser(version, descriptionFieldName, analyzer);
@@ -130,5 +152,9 @@ public class AccountDescriptionIndexImpl implements AccountDescriptionIndex, Ini
         map.put("accountId", doc.getField(accountIdFieldName).stringValue());
         map.put("description", doc.getField(descriptionFieldName).stringValue());
         return map;
+    }
+
+    public void setIndexFile(Resource indexFile) {
+        this.indexFile = indexFile;
     }
 }

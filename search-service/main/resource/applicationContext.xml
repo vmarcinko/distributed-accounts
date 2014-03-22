@@ -64,6 +64,8 @@
         <property name="kafkaAvroRecordLogConsumer" ref="kafkaAvroRecordLogConsumer"/>
     </bean>
 
-    <bean id="accountDescriptionIndex" class="me.distributedaccounts.search.service.AccountDescriptionIndexImpl"/>
+    <bean id="accountDescriptionIndex" class="me.distributedaccounts.search.service.AccountDescriptionIndexImpl">
+        <property name="indexFile" value="${indexFile}"/>
+    </bean>
 
 </beans>

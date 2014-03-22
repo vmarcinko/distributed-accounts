@@ -1,67 +1,41 @@
 package me.distributedaccounts.search.service;
 
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.RAMDirectory;
-import org.apache.lucene.util.Version;
+import org.springframework.core.io.FileSystemResource;
 
-import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 public class LuceneTest {
-    private static final Version version = Version.LUCENE_47;
 
-    private static final String accountIdFieldName = "accountId";
-    private static final String descriptionFieldName = "description";
+    public static void main(String[] args) throws Exception {
+        AccountDescriptionIndex accountDescriptionIndex = constructAccountDescriptionIndex();
 
-    public static void main(String[] args) throws IOException, ParseException {
-        // Store the index in memory:
-        Directory directory = new RAMDirectory();
-        Analyzer analyzer = new StandardAnalyzer(version);
+        accountDescriptionIndex.addAccountDescription("broj1", "Jako mali account!");
+        accountDescriptionIndex.addAccountDescription("broj2", "Jako veliki account!");
 
-        // To store an index on disk, use this instead:
-        //Directory directory = FSDirectory.open("/tmp/testindex");
+        List<Map<String, Object>> accounts = accountDescriptionIndex.findByDescription("jako");
+        System.out.println("accounts = " + accounts);
 
-        IndexWriterConfig config = new IndexWriterConfig(version, analyzer);
-        IndexWriter indexWriter = new IndexWriter(directory, config);
+        System.out.println("-------------------");
+        accounts = accountDescriptionIndex.findByDescription("mali");
+        System.out.println("accounts = " + accounts);
 
-        String text = "This is the text to be indexed.";
-        String accountId = "vjeran";
+        System.out.println("-------------------");
+        accountDescriptionIndex.removeAccountDescription("broj2");
+        accounts = accountDescriptionIndex.findByDescription("jako");
+        System.out.println("accounts = " + accounts);
 
-        Document doc = new Document();
-        doc.add(new Field(descriptionFieldName, text, TextField.TYPE_STORED));
-        doc.add(new Field(accountIdFieldName, accountId, TextField.TYPE_STORED));
+        destroy(accountDescriptionIndex);
+    }
 
-        indexWriter.addDocument(doc);
-        indexWriter.close();
+    private static void destroy(AccountDescriptionIndex accountDescriptionIndex) throws Exception {
+        ((AccountDescriptionIndexImpl) accountDescriptionIndex).destroy();
+    }
 
-        // Now search the index:
-        DirectoryReader directoryReader = DirectoryReader.open(directory);
-        IndexSearcher indexSearcher = new IndexSearcher(directoryReader);
-        // Parse a simple query that searches for "text":
-        QueryParser queryParser = new QueryParser(version, descriptionFieldName, analyzer);
-        Query query = queryParser.parse("text");
-        ScoreDoc[] hits = indexSearcher.search(query, null, 1000).scoreDocs;
-
-//        assertEquals(1, hits.length);
-        // Iterate through the results:
-        for (int i = 0; i < hits.length; i++) {
-            Document hitDoc = indexSearcher.doc(hits[i].doc);
-//            assertEquals("This is the text to be indexed.", hitDoc.get(descriptionFieldName));
-        }
-
-        directoryReader.close();
-        directory.close();
+    private static AccountDescriptionIndex constructAccountDescriptionIndex() throws Exception {
+        AccountDescriptionIndexImpl index = new AccountDescriptionIndexImpl();
+        index.setIndexFile(new FileSystemResource("C:/temp/searchDistAccountsIndex"));
+        index.afterPropertiesSet();
+        return index;
     }
 }
