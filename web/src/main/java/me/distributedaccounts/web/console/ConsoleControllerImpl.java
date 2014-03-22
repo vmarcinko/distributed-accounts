@@ -2,15 +2,18 @@ package me.distributedaccounts.web.console;
 
 import me.distributedaccounts.mgmt.client.AccountManagementClient;
 import me.distributedaccounts.mgmt.client.InsufficientMoneyException;
+import me.distributedaccounts.search.client.AccountSearchClient;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 public class ConsoleControllerImpl implements ConsoleController {
     private AccountManagementClient accountManagementClient;
+    private AccountSearchClient accountSearchClient;
 
     @Override
     public void readAndProcessConsoleInputs() throws IOException {
@@ -49,6 +52,8 @@ public class ConsoleControllerImpl implements ConsoleController {
         switch (parts[0]) {
             case "find":
                 return executeFind(parts);
+            case "findByDescription":
+                return executeFindByDescription(parts);
             case "open":
                 return executeOpen(parts);
             case "close":
@@ -97,7 +102,17 @@ public class ConsoleControllerImpl implements ConsoleController {
         return "Account found: " + accountJsonMap.toString();
     }
 
+    private String executeFindByDescription(String[] parts) {
+        String description = parts[1];
+        List<Map<String,Object>> accounts = accountSearchClient.findByDescription(description);
+        return "Accounts found: " + accounts;
+    }
+
     public void setAccountManagementClient(AccountManagementClient accountManagementClient) {
         this.accountManagementClient = accountManagementClient;
+    }
+
+    public void setAccountSearchClient(AccountSearchClient accountSearchClient) {
+        this.accountSearchClient = accountSearchClient;
     }
 }

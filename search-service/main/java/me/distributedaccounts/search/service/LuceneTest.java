@@ -1,7 +1,6 @@
 package me.distributedaccounts.search.service;
 
-import org.springframework.core.io.FileSystemResource;
-
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +33,7 @@ public class LuceneTest {
 
     private static AccountDescriptionIndex constructAccountDescriptionIndex() throws Exception {
         AccountDescriptionIndexImpl index = new AccountDescriptionIndexImpl();
-        index.setIndexFile(new FileSystemResource("C:/temp/searchDistAccountsIndex"));
+        index.setIndexFile(new File("C:/temp/searchDistAccountsIndex"));
         index.afterPropertiesSet();
         return index;
     }

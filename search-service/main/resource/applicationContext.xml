@@ -10,7 +10,7 @@
     <context:property-placeholder/>
 
     <bean class="me.distributedaccounts.search.service.cluster.HelixServiceClusterManager">
-        <property name="clusterName" value="MGMTCLUSTER"/>
+        <property name="clusterName" value="SEARCHCLUSTER"/>
         <property name="instanceName" value="${host}_${port}"/>
         <property name="zkAddress" value="127.0.0.1:2181"/>
         <property name="helixStateModelFactory" ref="helixStateModelFactory"/>
@@ -21,13 +21,6 @@
         <property name="servletPath" value="/*"/>
         <property name="configLocation" value="classpath:restServlet.xml"/>
     </bean>
-
-<!--
-    <bean id="accountManagementService" class="me.distributedaccounts.mgmt.service.AccountManagementServiceImpl">
-        <property name="accountDao" ref="accountDao"/>
-        <property name="accountEventsTopicName" value="accountEvents"/>
-    </bean>
--->
 
     <bean id="kafkaAvroRecordLogConsumer" class="me.distributedaccounts.avrolog.consumer.KafkaAvroRecordLogConsumerImpl">
         <property name="schemaRepository" ref="schemaRepository" />

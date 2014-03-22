@@ -21,15 +21,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.core.io.Resource;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
 public class AccountDescriptionIndexImpl implements AccountDescriptionIndex, InitializingBean, DisposableBean {
     private final Logger logger = LoggerFactory.getLogger(AccountDescriptionIndexImpl.class);
 
-    private Resource indexFile;
+    private File indexFile;
 
     private static final Version version = Version.LUCENE_47;
     private static final String accountIdFieldName = "accountId";
@@ -40,7 +40,7 @@ public class AccountDescriptionIndexImpl implements AccountDescriptionIndex, Ini
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        directory = FSDirectory.open(indexFile.getFile());
+        directory = FSDirectory.open(indexFile);
         analyzer = new StandardAnalyzer(version);
     }
 
@@ -56,7 +56,7 @@ public class AccountDescriptionIndexImpl implements AccountDescriptionIndex, Ini
         Objects.requireNonNull(accountId, "accountId is null");
         Objects.requireNonNull(description, "description is null");
 
-        logger.debug("Adding account description: accountId=" + accountId + ", description=" + description);
+        logger.debug("Adding account description to index: accountId=" + accountId + ", description=" + description);
 
         IndexWriter indexWriter = null;
         try {
@@ -88,7 +88,7 @@ public class AccountDescriptionIndexImpl implements AccountDescriptionIndex, Ini
 
     @Override
     public void removeAccountDescription(String accountId) {
-        logger.debug("Removing account description: accountId=" + accountId);
+        logger.debug("Removing account description from index: accountId=" + accountId);
         IndexWriter indexWriter = null;
         try {
             IndexWriterConfig config = new IndexWriterConfig(version, analyzer);
@@ -154,7 +154,7 @@ public class AccountDescriptionIndexImpl implements AccountDescriptionIndex, Ini
         return map;
     }
 
-    public void setIndexFile(Resource indexFile) {
+    public void setIndexFile(File indexFile) {
         this.indexFile = indexFile;
     }
 }

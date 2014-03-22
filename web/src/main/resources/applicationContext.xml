@@ -11,22 +11,28 @@
 
     <bean id="consoleController" class="me.distributedaccounts.web.console.ConsoleControllerImpl">
         <property name="accountManagementClient" ref="accountManagementClient"/>
+        <property name="accountSearchClient" ref="accountSearchClient"/>
     </bean>
 
-    <bean id="clusterClient" class="me.distributedaccounts.commons.cluster.client.HelixClusterClientImpl">
+    <bean id="mgmtClusterClient" class="me.distributedaccounts.commons.cluster.client.HelixClusterClientImpl">
         <property name="clusterName" value="MGMTCLUSTER"/>
         <property name="zkAddress" value="127.0.0.1:2181"/>
     </bean>
 
     <bean id="accountManagementClient" class="me.distributedaccounts.mgmt.client.AccountManagementClientImpl">
         <property name="restTemplate" ref="restTemplate"/>
-        <property name="clusterClient" ref="clusterClient"/>
+        <property name="clusterClient" ref="mgmtClusterClient"/>
         <property name="clusterResourceName" value="mgmtService"/>
+    </bean>
+
+    <bean id="searchClusterClient" class="me.distributedaccounts.commons.cluster.client.HelixClusterClientImpl">
+        <property name="clusterName" value="SEARCHCLUSTER"/>
+        <property name="zkAddress" value="127.0.0.1:2181"/>
     </bean>
 
     <bean id="accountSearchClient" class="me.distributedaccounts.search.client.AccountSearchClientImpl">
         <property name="restTemplate" ref="restTemplate"/>
-        <property name="clusterClient" ref="clusterClient"/>
+        <property name="clusterClient" ref="searchClusterClient"/>
         <property name="clusterResourceName" value="searchService"/>
     </bean>
 
