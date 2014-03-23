@@ -37,15 +37,25 @@ public class AccountDescriptionIndexImpl implements AccountDescriptionIndex, Ini
 
     private Directory directory;
     private Analyzer analyzer;
+    private IndexWriter indexWriter;
 
     @Override
     public void afterPropertiesSet() throws Exception {
         directory = FSDirectory.open(indexFile);
         analyzer = new StandardAnalyzer(version);
+
+        IndexWriterConfig config = new IndexWriterConfig(version, analyzer);
+        indexWriter = new IndexWriter(directory, config);
     }
 
     @Override
     public void destroy() throws Exception {
+        if (indexWriter != null) {
+            try {
+                indexWriter.close();
+            } catch (IOException e) {
+            }
+        }
         if (directory != null) {
             directory.close();
         }
@@ -58,24 +68,12 @@ public class AccountDescriptionIndexImpl implements AccountDescriptionIndex, Ini
 
         logger.debug("Adding account description to index: accountId=" + accountId + ", description=" + description);
 
-        IndexWriter indexWriter = null;
         try {
-            IndexWriterConfig config = new IndexWriterConfig(version, analyzer);
-            indexWriter = new IndexWriter(directory, config);
-
             Document doc = convertAccountDataToDocument(accountId, description);
             indexWriter.addDocument(doc);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
-
-        } finally {
-            if (indexWriter != null) {
-                try {
-                    indexWriter.close();
-                } catch (IOException e) {
-                }
-            }
         }
     }
 
@@ -89,23 +87,10 @@ public class AccountDescriptionIndexImpl implements AccountDescriptionIndex, Ini
     @Override
     public void removeAccountDescription(String accountId) {
         logger.debug("Removing account description from index: accountId=" + accountId);
-        IndexWriter indexWriter = null;
         try {
-            IndexWriterConfig config = new IndexWriterConfig(version, analyzer);
-            indexWriter = new IndexWriter(directory, config);
-
             indexWriter.deleteDocuments(new Term(accountIdFieldName, accountId));
-
         } catch (IOException e) {
             throw new RuntimeException(e);
-
-        } finally {
-            if (indexWriter != null) {
-                try {
-                    indexWriter.close();
-                } catch (IOException e) {
-                }
-            }
         }
     }
 
