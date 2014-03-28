@@ -9,11 +9,6 @@
 
     <context:property-placeholder/>
 
-    <bean id="consoleController" class="me.distributedaccounts.web.console.ConsoleControllerImpl">
-        <property name="accountManagementClient" ref="accountManagementClient"/>
-        <property name="accountSearchClient" ref="accountSearchClient"/>
-    </bean>
-
     <bean id="mgmtClusterClient" class="me.distributedaccounts.commons.cluster.client.HelixClusterClientImpl">
         <property name="clusterName" value="MGMTCLUSTER"/>
         <property name="zkAddress" value="127.0.0.1:2181"/>

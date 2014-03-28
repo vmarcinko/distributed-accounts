@@ -67,4 +67,3 @@ project(':mgmt-client') {
         compile project(':commons')
     }
 }
-

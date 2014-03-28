@@ -1,9 +1,12 @@
+apply plugin: 'war'
+
 archivesBaseName = 'distributed-accounts-web'
 
 dependencies {
 
     compile (
-            "net.sf.jopt-simple:jopt-simple:4.6",
-            "org.springframework:spring-webmvc:4.0.2.RELEASE"
+            "org.springframework:spring-webmvc:4.0.2.RELEASE",
+            "org.springframework:spring-context-support:4.0.2.RELEASE",
+			"org.freemarker:freemarker:2.3.20"
     )
 }

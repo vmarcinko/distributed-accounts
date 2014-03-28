@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <mvc:annotation-driven/>
+
+    <!-- freemarker config -->
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/templates"/>
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="default_encoding">UTF-8</prop>
+                <!--<prop key="cache_storage">${freemarkerConfig.cache_storage}</prop>-->
+                <!--<prop key="template_update_delay">${freemarkerConfig.template_update_delay}</prop>-->
+                <!-- this should be overridden by the directive settings in the template -->
+                <prop key="number_format">0.##########</prop>
+                <prop key="boolean_format">true,false</prop>
+                <prop key="date_format">dd.MM.yyyy</prop>
+                <prop key="time_format">HH:mm</prop>
+                <prop key="datetime_format">dd.MM.yyyy HH:mm</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="cache" value="true"/>
+        <property name="prefix" value=""/>
+        <property name="suffix" value=".ftl"/>
+    </bean>
+
+    <bean class="me.distributedaccounts.web.AccountsController">
+        <property name="accountManagementClient" ref="accountManagementClient"/>
+        <property name="accountSearchClient" ref="accountSearchClient"/>
+    </bean>
+</beans>
