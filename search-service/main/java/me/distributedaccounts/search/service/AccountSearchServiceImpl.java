@@ -26,8 +26,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class AccountDescriptionIndexImpl implements AccountDescriptionIndex, InitializingBean, DisposableBean {
-    private final Logger logger = LoggerFactory.getLogger(AccountDescriptionIndexImpl.class);
+public class AccountSearchServiceImpl implements AccountSearchService, AccountDescriptionIndex, InitializingBean, DisposableBean {
+    private final Logger logger = LoggerFactory.getLogger(AccountSearchServiceImpl.class);
 
     private File indexFile;
 

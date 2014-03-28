@@ -23,7 +23,7 @@
     </mvc:annotation-driven>
 
     <bean class="me.distributedaccounts.search.service.rest.SearchServiceRestController">
-        <property name="accountDescriptionIndex" ref="accountDescriptionIndex"/>
+        <property name="accountSearchService" ref="accountSearchService"/>
     </bean>
 
 </beans>

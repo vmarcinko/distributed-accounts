@@ -8,31 +8,32 @@ public class LuceneTest {
 
     public static void main(String[] args) throws Exception {
         AccountDescriptionIndex accountDescriptionIndex = constructAccountDescriptionIndex();
-
         accountDescriptionIndex.addAccountDescription("broj1", "Jako mali account!");
         accountDescriptionIndex.addAccountDescription("broj2", "Jako veliki account!");
 
-        List<Map<String, Object>> accounts = accountDescriptionIndex.findByDescription("jako");
+        AccountSearchService accountSearchService = (AccountSearchService) accountDescriptionIndex;
+
+        List<Map<String, Object>> accounts = accountSearchService.findByDescription("jako");
         System.out.println("accounts = " + accounts);
 
         System.out.println("-------------------");
-        accounts = accountDescriptionIndex.findByDescription("mali");
+        accounts = accountSearchService.findByDescription("mali");
         System.out.println("accounts = " + accounts);
 
         System.out.println("-------------------");
         accountDescriptionIndex.removeAccountDescription("broj2");
-        accounts = accountDescriptionIndex.findByDescription("jako");
+        accounts = accountSearchService.findByDescription("jako");
         System.out.println("accounts = " + accounts);
 
         destroy(accountDescriptionIndex);
     }
 
     private static void destroy(AccountDescriptionIndex accountDescriptionIndex) throws Exception {
-        ((AccountDescriptionIndexImpl) accountDescriptionIndex).destroy();
+        ((AccountSearchServiceImpl) accountDescriptionIndex).destroy();
     }
 
     private static AccountDescriptionIndex constructAccountDescriptionIndex() throws Exception {
-        AccountDescriptionIndexImpl index = new AccountDescriptionIndexImpl();
+        AccountSearchServiceImpl index = new AccountSearchServiceImpl();
         index.setIndexFile(new File("C:/temp/searchDistAccountsIndex"));
         index.afterPropertiesSet();
         return index;

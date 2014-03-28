@@ -27,7 +27,7 @@
         <property name="topic" value="accountEvents" />
         <property name="avroRecordConsumer">
             <bean class="me.distributedaccounts.search.service.AccountEventAvroRecordConsumer">
-                <property name="accountDescriptionIndex" ref="accountDescriptionIndex"/>
+                <property name="accountDescriptionIndex" ref="accountSearchService"/>
             </bean>
         </property>
         <property name="kafkaConsumerConfigProperties">
@@ -57,7 +57,7 @@
         <property name="kafkaAvroRecordLogConsumer" ref="kafkaAvroRecordLogConsumer"/>
     </bean>
 
-    <bean id="accountDescriptionIndex" class="me.distributedaccounts.search.service.AccountDescriptionIndexImpl">
+    <bean id="accountSearchService" class="me.distributedaccounts.search.service.AccountSearchServiceImpl">
         <property name="indexFile" value="${indexFile}"/>
     </bean>
 
