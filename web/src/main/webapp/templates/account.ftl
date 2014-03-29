@@ -5,10 +5,18 @@
 <h1>Account</h1>
 
 <#if infoMessage??>
-    <span style="color: blue">${infoMessage}</span>
+    <table style="background-color: #54e6ff" cellpadding="5">
+        <tr>
+            <td>${infoMessage}</td>
+        </tr>
+    </table>
 </#if>
 <#if errorMessage??>
-    <span style="color: red">${errorMessage}</span>
+    <table style="background-color: #cd7c6d" cellpadding="5">
+        <tr>
+            <td>${infoMessage}</td>
+        </tr>
+    </table>
 </#if>
 
 <ul>

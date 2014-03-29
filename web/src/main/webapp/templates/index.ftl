@@ -6,11 +6,28 @@
     <hr/>
 
     <#if infoMessage??>
-        <span style="color: blue">${infoMessage}</span>
+        <table style="background-color: #54e6ff" cellpadding="5">
+            <tr>
+                <td>${infoMessage}</td>
+            </tr>
+        </table>
     </#if>
-    <#if openedAccountId??>
-        <a href="<@spring.url relativeUrl='/accounts/${openedAccountId}' />">Go to</a>
-    </#if>
+
+    <br/>
+
+    <form action="<@spring.url relativeUrl='/index'/>" method="get">
+        Search by description: <input type="text" name="descriptionQueryValue"/>
+        <input type="submit" value="Search"/>
+    </form>
+
+    <ul>
+    <#list accounts as account>
+            <li>
+                <strong>ID:</strong> <a href="<@spring.url relativeUrl='/accounts/${account.id}'/>">${account.id}</a>,
+                <strong>Description:</strong> ${account.description}
+            </li>
+    </#list>
+    </ul>
 
     <h2>Account Opening</h2>
     <form action="<@spring.url relativeUrl='/open'/>" method="post">

@@ -6,9 +6,7 @@ import me.distributedaccounts.mgmt.service.event.AccountData;
 import me.distributedaccounts.mgmt.service.event.AccountDeletedEffect;
 import me.distributedaccounts.mgmt.service.event.AccountUpdatedEffect;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -22,6 +20,16 @@ public class InMemoryAccountDaoImpl implements AccountDao {
             return null;
         }
         return deserialize(map);
+    }
+
+    @Override
+    public List<Account> findAll() {
+        Collection<Map<String, Object>> accountsAsMap = accounts.values();
+        List<Account> list = new ArrayList<>();
+        for (Map<String, Object> map : accountsAsMap) {
+            list.add(deserialize(map));
+        }
+        return list;
     }
 
     @Override

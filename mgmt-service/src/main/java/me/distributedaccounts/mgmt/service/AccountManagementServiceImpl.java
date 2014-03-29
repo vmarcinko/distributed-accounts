@@ -8,6 +8,7 @@ import org.apache.avro.generic.GenericRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.UUID;
 
 public class AccountManagementServiceImpl implements AccountManagementService {
@@ -84,6 +85,11 @@ public class AccountManagementServiceImpl implements AccountManagementService {
     @Override
     public Account find(UUID id) {
         return accountDao.find(id);
+    }
+
+    @Override
+    public List<Account> findAll() {
+        return accountDao.findAll();
     }
 
     private EventData constructEventData() {

@@ -1,5 +1,6 @@
 package me.distributedaccounts.mgmt.service;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface AccountManagementService {
@@ -12,4 +13,6 @@ public interface AccountManagementService {
     void depositMoney(UUID id, float amount);
 
     Account find(UUID id);
+
+    List<Account> findAll();
 }

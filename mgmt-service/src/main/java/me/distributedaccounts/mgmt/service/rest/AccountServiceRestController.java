@@ -5,10 +5,7 @@ import me.distributedaccounts.mgmt.service.AccountManagementService;
 import me.distributedaccounts.mgmt.service.InsufficientFundsException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping(consumes = {"text/*", "application/*"}, produces = {"application/json"})
@@ -21,7 +18,17 @@ public class AccountServiceRestController {
         return account.toJacksonMap();
     }
 
-    @RequestMapping(value = "/accounts", method = RequestMethod.POST)
+    @RequestMapping(value = "/accounts", method = RequestMethod.GET)
+    public List<Map<String, Object>> findAll() {
+        List<Account> accounts = accountManagementService.findAll();
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (Account account : accounts) {
+            list.add(account.toJacksonMap());
+        }
+        return list;
+    }
+
+    @RequestMapping(value = "/accounts/open", method = RequestMethod.POST)
     public Map<String, Object> open(@RequestBody Map<String, Object> requestBody) {
         UUID accountId = UUID.fromString((String) requestBody.get("id"));
         String description = (String) requestBody.get("description");

@@ -7,6 +7,7 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -22,10 +23,16 @@ public class AccountManagementClientImpl implements AccountManagementClient {
     }
 
     @Override
+    public List<Map<String, Object>> findAll() {
+        String url = constructRequestUrl("/accounts", "0", MasterSlaveType.SLAVE);
+        return restTemplate.getForObject(url, List.class);
+    }
+
+    @Override
     public UUID openAccount(String description) {
         UUID accountId = UUID.randomUUID();
 
-        String url = constructRequestUrl("/accounts", accountId, MasterSlaveType.MASTER);
+        String url = constructRequestUrl("/accounts/open", accountId, MasterSlaveType.MASTER);
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("id", accountId.toString());

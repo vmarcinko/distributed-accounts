@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -20,7 +21,15 @@ public class AccountsController {
     private AccountSearchClient accountSearchClient;
 
     @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public String index(ModelMap model) {
+    public String index(@RequestParam(required = false) String descriptionQueryValue, ModelMap model) {
+        List<Map<String, Object>> accounts;
+        if (descriptionQueryValue == null) {
+            accounts = accountManagementClient.findAll();
+        } else {
+            accounts =  accountSearchClient.findByDescription(descriptionQueryValue);
+            model.addAttribute("infoMessage", "Found " + accounts.size() + " accounts for description text: " + descriptionQueryValue);
+        }
+        model.addAttribute("accounts", accounts);
         return "index";
     }
 
@@ -35,7 +44,6 @@ public class AccountsController {
     public String open(@RequestParam String description, RedirectAttributes redirectAttributes, ModelMap model) {
         UUID accountId = accountManagementClient.openAccount(description);
         redirectAttributes.addFlashAttribute("infoMessage", "Account opened under ID: " + accountId);
-        redirectAttributes.addFlashAttribute("openedAccountId", accountId);
         return "redirect:/index";
     }
 

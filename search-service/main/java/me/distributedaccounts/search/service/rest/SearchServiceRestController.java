@@ -17,7 +17,15 @@ public class SearchServiceRestController {
     @RequestMapping(value = "/accounts/search/{description}", method = RequestMethod.GET)
     public List<Map<String, Object>> find(@PathVariable String description) {
         List<Map<String, Object>> accounts = accountSearchService.findByDescription(description);
-        return accounts;
+        return convertAccountIdsToIds(accounts);
+    }
+
+    private List<Map<String, Object>> convertAccountIdsToIds(List<Map<String, Object>> original) {
+        for (Map<String, Object> indexedAccount : original) {
+            Object accountId = indexedAccount.remove("accountId");
+            indexedAccount.put("id", accountId);
+        }
+        return original;
     }
 
     public void setAccountSearchService(AccountSearchService accountSearchService) {
