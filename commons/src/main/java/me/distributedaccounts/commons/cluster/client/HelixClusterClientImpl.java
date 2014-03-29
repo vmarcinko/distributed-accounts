@@ -68,12 +68,17 @@ public class HelixClusterClientImpl implements ClusterClient, InitializingBean, 
     }
 
     @Override
-    public NodeInfo resolveNode(String resourceName, int partitionIndex, String partitionState) {
+    public NodeInfo resolveNode(String resourceName, int partitionIndex, String partitionState, boolean required) {
         String partitionName = resourceName + "_" + partitionIndex;
         List<InstanceConfig> instanceConfigs = routingTableProvider.getInstances(resourceName, partitionName, partitionState);
 
         if (instanceConfigs.isEmpty()) {
-            return null;
+            if (required) {
+                throw new IllegalStateException("Cannot resolve node for resourceName=" + resourceName + ", partitionIndex=" + partitionIndex + ", partitionState=" + partitionState);
+            } else {
+                return null;
+            }
+
         } else {
             InstanceConfig instanceConfig = instanceConfigs.get(0);
 

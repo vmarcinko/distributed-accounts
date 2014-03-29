@@ -10,6 +10,7 @@
     <logger name="org.I0Itec" level="info"/>
     <logger name="org.apache.helix" level="warn"/>
     <logger name="org.springframework" level="info"/>
+    <logger name="freemarker" level="info"/>
 
     <root level="debug">
         <appender-ref ref="stdout"/>

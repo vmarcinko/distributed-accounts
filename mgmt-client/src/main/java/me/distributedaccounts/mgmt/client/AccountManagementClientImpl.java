@@ -60,7 +60,14 @@ public class AccountManagementClientImpl implements AccountManagementClient {
 
     private String constructRequestUrl(String path, Object partitionKey, MasterSlaveType masterSlaveType) {
         int partitionIndex = resolvePartitionIndex(partitionKey);
-        NodeInfo nodeInfo = clusterClient.resolveNode(clusterResourceName, partitionIndex, masterSlaveType.name());
+
+        boolean required = masterSlaveType.equals(MasterSlaveType.MASTER);
+        NodeInfo nodeInfo = clusterClient.resolveNode(clusterResourceName, partitionIndex, masterSlaveType.name(), required);
+
+        if (nodeInfo == null && !required) {
+            nodeInfo = clusterClient.resolveNode(clusterResourceName, partitionIndex, MasterSlaveType.MASTER.name(), true);
+        }
+
         UriComponents uriComponents = UriComponentsBuilder.newInstance()
                 .scheme("http")
                 .host(nodeInfo.getHost())

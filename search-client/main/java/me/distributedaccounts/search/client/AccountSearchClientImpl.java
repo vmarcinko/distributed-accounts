@@ -21,7 +21,7 @@ public class AccountSearchClientImpl implements AccountSearchClient {
     }
 
     private String constructRequestUrl(String path) {
-        NodeInfo nodeInfo = clusterClient.resolveNode(clusterResourceName, 0, "ONLINE");
+        NodeInfo nodeInfo = clusterClient.resolveNode(clusterResourceName, 0, "ONLINE", true);
         UriComponents uriComponents = UriComponentsBuilder.newInstance()
                 .scheme("http")
                 .host(nodeInfo.getHost())
