@@ -62,7 +62,7 @@ public class MessageConsumingTask implements Runnable {
     }
 
     private GenericRecord deserializeAvroRecord(byte[] avroRecordBytes, Schema writerSchema, Schema readerSchema) throws IOException {
-        DatumReader<GenericRecord> datumReader = new GenericDatumReader<>(writerSchema, readerSchema);
+        DatumReader<GenericRecord> datumReader = new GenericDatumReader<GenericRecord>(writerSchema, readerSchema);
         Decoder decoder = DecoderFactory.get().binaryDecoder(avroRecordBytes, null);
         return datumReader.read(null, decoder);
     }

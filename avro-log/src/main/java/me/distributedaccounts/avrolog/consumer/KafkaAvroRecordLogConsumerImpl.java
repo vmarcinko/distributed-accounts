@@ -26,7 +26,7 @@ public class KafkaAvroRecordLogConsumerImpl implements KafkaAvroRecordLogConsume
     private String topic;
     private AvroRecordConsumer avroRecordConsumer;
 
-    private Map<String, Future> partitionConsumingThreadFutures = new HashMap<>();
+    private Map<String, Future> partitionConsumingThreadFutures = new HashMap<String, Future>();
 
     @Override
     public void afterPropertiesSet() throws Exception {

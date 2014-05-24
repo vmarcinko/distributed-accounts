@@ -98,7 +98,7 @@ public class TestAvroEventsApp {
     private static SchemaRepository constructSchemaRepository() {
         InMemorySchemaRepositoryImpl repository = new InMemorySchemaRepositoryImpl();
 
-        HashSet<Class<? extends GenericContainer>> avroClasses = new HashSet<>();
+        HashSet<Class<? extends GenericContainer>> avroClasses = new HashSet<Class<? extends GenericContainer>>();
         avroClasses.add(AccountOpenedEvent.class);
         repository.setAvroClasses(avroClasses);
 

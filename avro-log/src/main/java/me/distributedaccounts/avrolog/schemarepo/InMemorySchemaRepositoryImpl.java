@@ -10,9 +10,9 @@ import java.nio.ByteBuffer;
 import java.util.*;
 
 public class InMemorySchemaRepositoryImpl implements SchemaRepository, InitializingBean {
-    private Set<Class<? extends GenericContainer>> avroClasses = new HashSet<>();
+    private Set<Class<? extends GenericContainer>> avroClasses = new HashSet<Class<? extends GenericContainer>>();
 
-    private final Map<ByteBuffer, Schema> schemas = new HashMap<>();
+    private final Map<ByteBuffer, Schema> schemas = new HashMap<ByteBuffer, Schema>();
 
     @Override
     public void afterPropertiesSet() throws Exception {

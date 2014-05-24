@@ -26,7 +26,7 @@ public class KafkaAvroRecordLoggerImpl implements AvroRecordLogger, Initializing
     @Override
     public void afterPropertiesSet() throws Exception {
         ProducerConfig producerConfig = new ProducerConfig(kafkaProducerConfigProperties);
-        producer = new Producer<>(producerConfig);
+        producer = new Producer<byte[], byte[]>(producerConfig);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class KafkaAvroRecordLoggerImpl implements AvroRecordLogger, Initializing
         logger.info("Logging Avro record '" + avroRecord.getSchema().getFullName() + "' to topic/partition " + topic + "/" + partition + " under key '" + recordKey + "': " + avroRecord);
         try {
             byte[] messageBytes = encodeAvroRecordWithSchemaId(avroRecord);
-            producer.send(new KeyedMessage<>(topic, recordKey.getBytes("UTF8"), messageBytes));
+            producer.send(new KeyedMessage(topic, recordKey.getBytes("UTF8"), messageBytes));
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -62,7 +62,7 @@ public class KafkaAvroRecordLoggerImpl implements AvroRecordLogger, Initializing
     private byte[] serializeAvroRecord(GenericContainer avroRecord) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Encoder encoder = EncoderFactory.get().directBinaryEncoder(outputStream, null);
-        SpecificDatumWriter<GenericContainer> writer = new SpecificDatumWriter<>(avroRecord.getSchema());
+        SpecificDatumWriter<GenericContainer> writer = new SpecificDatumWriter<GenericContainer>(avroRecord.getSchema());
         writer.write(avroRecord, encoder);
         encoder.flush();
         outputStream.close();

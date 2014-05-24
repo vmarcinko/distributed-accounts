@@ -21,7 +21,7 @@ public class AccountServiceRestController {
     @RequestMapping(value = "/accounts", method = RequestMethod.GET)
     public List<Map<String, Object>> findAll() {
         List<Account> accounts = accountManagementService.findAll();
-        List<Map<String, Object>> list = new ArrayList<>();
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         for (Account account : accounts) {
             list.add(account.toJacksonMap());
         }

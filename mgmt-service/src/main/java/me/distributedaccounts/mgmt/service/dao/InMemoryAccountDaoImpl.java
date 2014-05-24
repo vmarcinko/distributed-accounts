@@ -25,7 +25,7 @@ public class InMemoryAccountDaoImpl implements AccountDao {
     @Override
     public List<Account> findAll() {
         Collection<Map<String, Object>> accountsAsMap = accounts.values();
-        List<Account> list = new ArrayList<>();
+        List<Account> list = new ArrayList<Account>();
         for (Map<String, Object> map : accountsAsMap) {
             list.add(deserialize(map));
         }

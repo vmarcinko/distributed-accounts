@@ -2,6 +2,7 @@ package me.distributedaccounts.web;
 
 import me.distributedaccounts.mgmt.client.AccountManagementClient;
 import me.distributedaccounts.mgmt.client.InsufficientMoneyException;
+import me.distributedaccounts.search.client.AccountSearchClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
