@@ -34,7 +34,7 @@ public class AccountManagementClientImpl implements AccountManagementClient {
 
         String url = constructRequestUrl("/accounts/open", accountId, MasterSlaveType.MASTER);
 
-        Map<String, Object> requestBody = new HashMap<>();
+        Map<String, Object> requestBody = new HashMap<String, Object>();
         requestBody.put("id", accountId.toString());
         requestBody.put("description", description);
         restTemplate.postForObject(url, requestBody, Object.class);
@@ -51,7 +51,7 @@ public class AccountManagementClientImpl implements AccountManagementClient {
     public void withdrawMoney(UUID id, float amount) throws InsufficientMoneyException {
         String url = constructRequestUrl("/accounts/{accountId}/withdraw", id, MasterSlaveType.MASTER);
 
-        Map<String, Object> requestBody = new HashMap<>();
+        Map<String, Object> requestBody = new HashMap<String, Object>();
         requestBody.put("amount", amount);
         restTemplate.postForObject(url, requestBody, Object.class, id);
     }
@@ -60,7 +60,7 @@ public class AccountManagementClientImpl implements AccountManagementClient {
     public void depositMoney(UUID id, float amount) {
         String url = constructRequestUrl("/accounts/{accountId}/deposit", id, MasterSlaveType.MASTER);
 
-        Map<String, Object> requestBody = new HashMap<>();
+        Map<String, Object> requestBody = new HashMap<String, Object>();
         requestBody.put("amount", amount);
         restTemplate.postForObject(url, requestBody, Object.class, id);
     }

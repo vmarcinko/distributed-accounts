@@ -23,7 +23,7 @@ public class HelixClusterClientImpl implements ClusterClient, InitializingBean, 
     private HelixManager helixManager;
     private RoutingTableProvider routingTableProvider;
 
-    private final Map<String, Integer> resourceNumberOfPartitions = new ConcurrentHashMap<>();
+    private final Map<String, Integer> resourceNumberOfPartitions = new ConcurrentHashMap<String, Integer>();
 
     @Override
     public void afterPropertiesSet() throws Exception {
